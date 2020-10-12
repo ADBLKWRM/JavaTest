@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.UserMapper">
+    <select id="findUserByUsername" resultType="com.example.demo.pojo.User">
+        select * from `user` where username=#{username}
+    </select>
+    
+    <select id="findRoleByUid" resultType="com.example.demo.pojo.Role">
+        SELECT * FROM `role` r,`role_user` ur
+            WHERE r.rid=ur.rid AND ur.uid=#{uid}
+    </select>
+
+    <select id="findUserAll" resultType="com.example.demo.pojo.User">
+        SELECT * FROM USER where 1=1
+        <if test="username !=null and username !=''">
+            and username like '%${username}%'
+        </if>
+        <if test="enable !=null ">
+            and enable=#{enable}
+        </if>
+    </select>
+    <delete id="delUser">
+        DELETE
+FROM
+  `security`.`user`
+WHERE `uid` = #{uid} ;
+    </delete>
+</mapper>

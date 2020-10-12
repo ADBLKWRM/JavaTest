@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="/" method="post">
+    <input type="text" name="username" th:value="${username}">
+    <select name="enable">
+        <option value="" th:text="请选择"/>
+        <option value="1" th:selected="${enable==1}">启用</option>
+        <option value="0" th:selected="${enable==0}">禁用</option>
+    </select>
+    <input type="submit" value="查询">
+</form>
+<table border="1">
+    <tr>
+        <td>用戶</td>
+        <td>用戶角色</td>
+        <td>Email</td>
+        <td>年龄</td>
+        <td>性别</td>
+        <td>状态</td>
+        <td>是否锁定</td>
+    </tr>
+    <tr th:each="user :${userAll}">
+        <td th:text="${user.username}">用戶</td>
+        <td ><span th:each="role:${user.roles}" th:text="${role.nameZH}"/></td>
+        <td th:text="${user.email}">Email</td>
+        <td th:text="${user.age}">年龄</td>
+        <td th:text="${user.sex == 0 ? '男' : '女'}">性别</td>
+        <td th:text="${user.enable==0 ? '禁用':'启用'}" id="status">状态</td>
+        <td th:text="${user.locked==1?'未锁定':'锁定'}">是否锁定</td>
+        <td>
+            <button type="button"  th:onclick="|del(${user.uid},${user.enabled})|">删除</button>
+        </td>
+    </tr>
+</table>
+</body>
+<script src="webjars/jquery/3.5.1/jquery.js"></script>
+<script>
+    function del(uid,enabled) {
+        if(enabled==0){
+                    $.ajax({
+                        url: "/dba/del",
+                        dataType: "JSON",
+                        data: {uid: uid},
+                        success: function (msg) {
+                            if (msg.code == 200) {
+                                alert('删除成功');
+                                window.location.reload();
+                            }
+                        }
+                    })
+        }else{
+            alert("启用状态")
+        }
+
+    }
+</script>
+</html>
